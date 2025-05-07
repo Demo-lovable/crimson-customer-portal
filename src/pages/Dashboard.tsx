@@ -17,7 +17,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className="min-h-screen flex bg-gray-50">
       <Navbar />
-      <main className="flex-1 p-8 mr-16">
+      <main className="flex-1 p-8 ml-16">
         <CustomerTable />
       </main>
     </div>

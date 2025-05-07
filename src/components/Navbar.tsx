@@ -21,7 +21,7 @@ const Navbar: React.FC<NavbarProps> = ({ className }) => {
   return (
     <aside
       className={cn(
-        "fixed right-0 top-0 z-30 flex h-screen w-16 flex-col items-center justify-between bg-sidebar py-4",
+        "fixed left-0 top-0 z-30 flex h-screen w-16 flex-col items-center justify-between bg-sidebar py-4",
         className
       )}
     >
@@ -29,10 +29,13 @@ const Navbar: React.FC<NavbarProps> = ({ className }) => {
         <Button
           variant="ghost"
           size="icon"
-          className="hover:bg-accent/10 hover:text-accent"
+          className="relative hover:bg-accent/10 hover:text-accent group"
           title="Customer List"
         >
           <List className="h-5 w-5" />
+          <span className="absolute left-full ml-2 whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity">
+            Customer List
+          </span>
         </Button>
       </div>
 
@@ -41,10 +44,13 @@ const Navbar: React.FC<NavbarProps> = ({ className }) => {
           variant="ghost"
           size="icon"
           onClick={handleSignOut}
-          className="hover:bg-accent/10 hover:text-accent"
+          className="relative hover:bg-accent/10 hover:text-accent group"
           title="Sign Out"
         >
           <LogOut className="h-5 w-5" />
+          <span className="absolute left-full ml-2 whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity">
+            Sign Out
+          </span>
         </Button>
       </div>
     </aside>
