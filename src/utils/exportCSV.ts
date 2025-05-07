@@ -1,38 +1,44 @@
 
 import { Customer } from "./mockData";
 
-export function exportCustomersToCSV(customers: Customer[]): void {
-  // Define CSV headers
-  const headers = ["Name", "Surname", "Email", "Card Reference"];
-  
-  // Map customer data to CSV rows
-  const csvData = customers.map(customer => [
-    customer.name,
-    customer.surname,
-    customer.email,
-    customer.cardRef
-  ]);
-  
-  // Combine headers and data
+export const exportCustomersToCSV = (customers: Customer[]): void => {
+  // Define columns to be exported
+  const headers = [
+    "Name",
+    "Surname",
+    "Email",
+    "Card Reference",
+    "Token",
+    "UUID",
+    "Type"
+  ];
+
+  // Create CSV content
   const csvContent = [
     headers.join(","),
-    ...csvData.map(row => row.join(","))
+    ...customers.map(customer => [
+      customer.name,
+      customer.surname,
+      customer.email,
+      customer.cardRef,
+      customer.token,
+      customer.uuid,
+      customer.type
+    ].join(","))
   ].join("\n");
-  
-  // Create a Blob with the CSV content
+
+  // Create download link
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  
-  // Create a download link
-  const link = document.createElement("a");
   const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
   
   // Set link properties
   link.setAttribute("href", url);
-  link.setAttribute("download", "customer-list.csv");
+  link.setAttribute("download", `customer-data-${new Date().toISOString().slice(0, 10)}.csv`);
   link.style.visibility = "hidden";
   
-  // Append to document, trigger click, and clean up
+  // Add link to document, trigger click, then remove
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-}
+};

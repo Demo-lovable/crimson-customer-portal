@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue, 
 } from "@/components/ui/select";
-import { Copy, FileText } from "lucide-react";
+import { Copy, FileText, Wallet, Tour, Dining } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Customer, customers } from "@/utils/mockData";
 import { exportCustomersToCSV } from "@/utils/exportCSV";
@@ -24,15 +24,20 @@ import { exportCustomersToCSV } from "@/utils/exportCSV";
 const CustomerTable: React.FC = () => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [filterType, setFilterType] = useState<string | null>(null);
   const { toast } = useToast();
   
   // Calculate pagination
-  const totalPages = Math.ceil(customers.length / pageSize);
+  const filteredCustomers = filterType 
+    ? customers.filter(customer => customer.type === filterType)
+    : customers;
+    
+  const totalPages = Math.ceil(filteredCustomers.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
-  const visibleCustomers = customers.slice(startIndex, startIndex + pageSize);
+  const visibleCustomers = filteredCustomers.slice(startIndex, startIndex + pageSize);
   
   const handleExportCSV = () => {
-    exportCustomersToCSV(customers);
+    exportCustomersToCSV(filteredCustomers);
     toast({
       title: "Export successful",
       description: "Customer data has been exported as CSV file",
@@ -58,6 +63,11 @@ const CustomerTable: React.FC = () => {
     setCurrentPage(1); // Reset to first page when changing page size
   };
   
+  const handleFilterChange = (type: string | null) => {
+    setFilterType(type);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+  
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-6">
@@ -71,6 +81,35 @@ const CustomerTable: React.FC = () => {
         </Button>
       </div>
       
+      <div className="flex gap-2 mb-4">
+        <Button
+          variant={filterType === 'wallet' ? 'default' : 'outline'}
+          onClick={() => handleFilterChange(filterType === 'wallet' ? null : 'wallet')}
+          className={filterType === 'wallet' ? 'bg-accent hover:bg-accent/90' : ''}
+        >
+          <Wallet className="mr-2 h-4 w-4" />
+          Wallet
+        </Button>
+        
+        <Button
+          variant={filterType === 'tour' ? 'default' : 'outline'}
+          onClick={() => handleFilterChange(filterType === 'tour' ? null : 'tour')}
+          className={filterType === 'tour' ? 'bg-accent hover:bg-accent/90' : ''}
+        >
+          <Tour className="mr-2 h-4 w-4" />
+          Tour
+        </Button>
+        
+        <Button
+          variant={filterType === 'dining' ? 'default' : 'outline'}
+          onClick={() => handleFilterChange(filterType === 'dining' ? null : 'dining')}
+          className={filterType === 'dining' ? 'bg-accent hover:bg-accent/90' : ''}
+        >
+          <Dining className="mr-2 h-4 w-4" />
+          Dining
+        </Button>
+      </div>
+      
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -79,6 +118,8 @@ const CustomerTable: React.FC = () => {
               <TableHead>Surname</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Card Reference</TableHead>
+              <TableHead>Token</TableHead>
+              <TableHead>UUID</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -89,6 +130,8 @@ const CustomerTable: React.FC = () => {
                 <TableCell>{customer.surname}</TableCell>
                 <TableCell>{customer.email}</TableCell>
                 <TableCell>{customer.cardRef}</TableCell>
+                <TableCell>{customer.token || 'N/A'}</TableCell>
+                <TableCell>{customer.uuid || 'N/A'}</TableCell>
                 <TableCell className="text-right">
                   <Button
                     variant="outline"
@@ -133,13 +176,13 @@ const CustomerTable: React.FC = () => {
             Previous
           </Button>
           <span className="text-sm">
-            Page {currentPage} of {totalPages}
+            Page {currentPage} of {totalPages || 1}
           </span>
           <Button
             variant="outline"
             size="sm"
             onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            disabled={currentPage === totalPages || totalPages === 0}
           >
             Next
           </Button>
