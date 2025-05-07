@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue, 
 } from "@/components/ui/select";
-import { Copy, FileText, Wallet, Tour, Dining } from "lucide-react";
+import { Copy, FileText, Wallet, Plane, Utensils } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Customer, customers } from "@/utils/mockData";
 import { exportCustomersToCSV } from "@/utils/exportCSV";
@@ -96,7 +96,7 @@ const CustomerTable: React.FC = () => {
           onClick={() => handleFilterChange(filterType === 'tour' ? null : 'tour')}
           className={filterType === 'tour' ? 'bg-accent hover:bg-accent/90' : ''}
         >
-          <Tour className="mr-2 h-4 w-4" />
+          <Plane className="mr-2 h-4 w-4" />
           Tour
         </Button>
         
@@ -105,7 +105,7 @@ const CustomerTable: React.FC = () => {
           onClick={() => handleFilterChange(filterType === 'dining' ? null : 'dining')}
           className={filterType === 'dining' ? 'bg-accent hover:bg-accent/90' : ''}
         >
-          <Dining className="mr-2 h-4 w-4" />
+          <Utensils className="mr-2 h-4 w-4" />
           Dining
         </Button>
       </div>
